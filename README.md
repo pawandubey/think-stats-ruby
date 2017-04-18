@@ -9,6 +9,36 @@ On the other hand, this repository also provides a way for me to evaluate the st
 
 > __DISCLAIMER__ : The structure of this repository can change substantially in the near future - but things should keep working correctly.
 
+## Getting Started
+
+### Installation
+
+This project requires that you have `jupyter` installed.
+In most cases, using the correct version of pip will do the trick. You may need to figure out dependency conflicts.
+
+> Note: pip is already installed if you are using Python version >= 3.4/2.7.9
+> Use pip3 if you are using Python3. Python3 is recommended.
+
+````bash
+pip3 install jupyter
+````
+
+Then make sure you have `ruby` version `2.2` or greater installed. I recommend [rvm](http://rvm.io) to install and manage ruby versions.
+
+You also need to install [bundler](http://bundler.io) to manage ruby gems.
+
+Once you have all that set up,
+
+> You can just download the zip and extract it to a suitable location if you don't want to use git
+
+````bash
+git clone https://github.com/pawandubey/think-stats-ruby.git
+
+cd think-stats-ruby
+
+bundle # to resolve dependencies
+````
+
 ## Strategy
 
 Rewrite all helper functionality in pure Ruby and also use [`SciRuby`](http://sciruby.com/) tools wherever possible. Especially construct `Daru` dataframes and utilize that for visualizations for correctness and brevity.
