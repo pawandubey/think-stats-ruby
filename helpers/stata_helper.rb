@@ -1,8 +1,11 @@
+require 'daru'
+
 module ThinkStatsRuby
   class StataHelper
-    def self.read_stata_file(dct_file_path, data_file_path)
+    def self.read_stata_file(dct_file_path, data_file_path, as_dataframe = false)
       spec = parse_spec(dct_file_path)
       frame = parse_data(spec, data_file_path)
+      as_dataframe ? frame.as_dataframe : frame
     end
 
     def self.parse_spec(dct_file_path)
@@ -51,22 +54,25 @@ module ThinkStatsRuby
       start_col = Integer(start_col) - 1
       type, name, format_str, *desc = line.split[1..-1]
 
-      desc = desc.join(" ").tr("\"", "")
-
-      type_fun, len = case type
-             when /str/
-               [:to_s, 12]
-             when /(double|float)/
-               [:to_f, 18]
-             when /byte/
-               [:to_i, 1]
-             when /int/
-               [:to_i, 4]
-             end
-
+      len = format_str[/(\d+)/, 1].to_i
       end_col = start_col + len
 
-      [start_col, end_col, type_fun, name, format_str, desc]
+      desc = desc.join(" ").tr("\"", "")
+
+      type_func = get_type_cast_func(type)
+
+      [start_col, end_col, type_func, name, format_str, desc]
+    end
+
+    def get_type_cast_func(type)
+      case type
+      when /str/
+        :to_s
+      when /(double|float)/
+        :to_f
+      when /(byte|int)/
+        :to_i
+      end
     end
   end
 
@@ -93,6 +99,10 @@ module ThinkStatsRuby
     def update(header, data)
       @data[header] ||= []
       @data[header] << data
+    end
+
+    def as_dataframe
+      Daru::DataFrame.new(@data)
     end
   end
 end
